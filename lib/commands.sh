@@ -172,6 +172,8 @@ cmd_clean() {
 	src_workdir="${workdir}/$name"
 
 	info -n "--> Cleaning workdir ${src_workdir}:"
-	rm -rfv ${src_workdir}
+	rm -rfv "${src_workdir}"
+
+	[ "$(ls $workdir} | wc -l" -eq "0" ] rm -rfv "${workdir}"
 	info "--> Clean complete\n"
 }
