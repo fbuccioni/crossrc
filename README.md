@@ -26,7 +26,26 @@ To start from zero use the following commands in your project root folder
     $ git submodule add http://github.com/falcacibar/crossrc.git build
     $ ./build/project PROJECT_NAME
     
-    
+The main script `crossrc`
+-------------------------
+
+This script are the heart of crossrc, this script do all the work 
+reading all the projects in `src/` and applying the command to the
+project. The following commands are permitted:
+
+| Command   | Description
+|-----------|-----------------------------------------------
+| `build`   | Build the scripts and put it in `$distdir`
+| `install` | Installs script in the system (If it is configured)
+| `clean`   | Cleans build paths
+
+
+You can use multiple commands, for example, for `build`, `install`
+and `clean` use the following command
+
+    $ ./build/crossrc build install clean
+
+NOTE: Maybe you need a superuser permissions to install
 
 Writing scripts with CrossRC
 ---------------------------
