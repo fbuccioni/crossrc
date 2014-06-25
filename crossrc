@@ -1,0 +1,53 @@
+#!/bin/sh
+#
+# crossrc -  A ssimple cross-platform service script framework
+
+version="0.9b"
+
+# Get my directory
+lookup_crossrc() {
+	crossrc="$0"
+	while true; do
+		local link="$( readlink $crossrc )"
+		[ "${link}" = "" ] && break
+		crossrc="${link}"
+	done
+
+	cd $( dirname $crossrc )
+	crossrc="$PWD"
+}
+
+lookup_crossrc
+
+# lib calls
+. "${crossrc}/lib/platform.sh"
+. "${crossrc}/lib/base.sh"
+
+#
+if [ "$#" -eq "0" ]; then
+	usage
+	exit 1
+fi
+
+. "${crossrc}/lib/utils.sh"
+. "${crossrc}/lib/commands.sh"
+
+
+valid_args "$@"
+
+title
+
+info "Detected platform: ${vendor} ${kernel}\n"
+
+[ "${kernel}" = "unknown" ] \
+	&& warn "Cannot recognize your platform, you can specify one with the -k and -v switches"
+
+lookup_srcdir
+
+for project in "${srcdir}/"*; do
+		info "-> Entering directory '${project}'\n"
+
+		for arg in $crossrc_commands; do
+				"cmd_${arg}" "${project}"
+		done
+done
