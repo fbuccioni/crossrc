@@ -22,15 +22,18 @@ readlink_f() {
 crossrcdir="$(dirname "$(readlink_f "${0}")")"
 basedir="$(readlink_f "${crossrcdir}/..")"
 
+cd "${basedir}"
+
+mkdir -p "${basedir}/dist"
+
 for proj in "$@"; do
 	relsrcdir="src/${proj}"
 
 	srcdir="${basedir}/${relsrcdir}"
 	echo "-> Creating project ${proj} in ${srcdir}"
 
-	# Creating folder
-	cd "${basedir}"
-
 	mkdir -pv "${relsrcdir}" 
+
+	echo "-> Copying skeleton..."
 	cp -vprn "build/skel/"* "${relsrcdir}"
 done

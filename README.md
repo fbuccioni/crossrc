@@ -20,8 +20,6 @@ To create a project you have to use a common folder structure:
             os             Platform configuration overrides
         ANOTHER_PROJECT/   ...
           ...
-    build.sh               Link to "build/crossrc"
-      
 
 To start from zero use the following commands in your project root folder
 
