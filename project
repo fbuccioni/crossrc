@@ -1,0 +1,36 @@
+#!/bin/sh
+
+if [ "$#" -eq "0" ]; then
+	echo "usage: $0 project_name [project_name2] ..."
+	exit 1
+fi
+
+readlink_f() {
+	readlink -f $1 2> /dev/null
+
+	if [ "$?" != "0" ]; then
+		cur=$1
+		while [ ! -z "${cur}" ]; do
+			link="${cur}"
+			cur="$( readlink $0 )"
+		done
+		cd "${link}"
+		echo "${PWD}"
+	fi
+}
+
+crossrcdir="$(dirname "$(readlink_f "${0}")")"
+basedir="$(readlink_f "${crossrcdir}/..")"
+
+for proj in "$@"; do
+	relsrcdir="src/${proj}"
+
+	srcdir="${basedir}/${relsrcdir}"
+	echo "-> Creating project ${proj} in ${srcdir}"
+
+	# Creating folder
+	cd "${basedir}"
+
+	mkdir -pv "${relsrcdir}" 
+	cp -vprn "build/skel/"* "${relsrcdir}"
+done

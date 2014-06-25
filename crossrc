@@ -2,7 +2,7 @@
 #
 # crossrc -  A ssimple cross-platform service script framework
 
-version="0.9b"
+version="0.12b"
 
 # Get my directory
 lookup_crossrc() {
