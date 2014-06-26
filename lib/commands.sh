@@ -91,8 +91,12 @@ cmd_build() {
 	if can $replace_funcs ; then 
 		> "${src_workdir}/sed_script"
 		for func in cbegin cinfo cwarn cerror cend; do
-			append_script "${src_workdir}/sed_script" 's/\\([ \\t]*\)'"${func}"'\([ \\t]*\\)/\\1'$(eval "echo \"\${func_${func}}\"")'\\2/g'
+			append_script "${src_workdir}/sed_script" 's/\([ \t]*\)'"${func}"'\([ \t]*\)/\1'$(eval "echo \"\${func_${func}}\"")'\2/g'
 		done
+
+        # Stupid workarround, shit happens some sh versions have some issues with '\'
+        sed -e 's/\\\\/\\/g' "${src_workdir}/sed_script" > "${src_workdir}/sed_script_wa"
+        mv  "${src_workdir}/sed_script_wa" "${src_workdir}/sed_script"
 
 		sed -f "${src_workdir}/sed_script" -E "${work_script}" > "${src_workdir}/initrc_replaced" 
 
@@ -158,7 +162,7 @@ cmd_install() {
 							"${os_inc_dir}/post-install.sh" 
 	);
 
-	if [ -z "${os_postinstall}" ]; then 
+	if [ ! -z "${os_postinstall}" ]; then 
 		info "---> Running platform post-instal script '${os_postinstall}'"
 		. $os_postinstall 
 	fi
