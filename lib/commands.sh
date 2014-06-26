@@ -59,19 +59,6 @@ cmd_build() {
 	# da file	
 	append_script "${work_script}" "$(cat "${srcdir}/initrc")"
 
-	# Replaced funcs
-	if can $replace_funcs ; then 
-		> "${src_workdir}/sed_script"
-		for func in cbegin cinfo cwarn cerror cend; do
-			append_script "${src_workdir}/sed_script" 's/\\([ \\t]*\)'"${func}"'\([ \\t]*\\)/\\1'$(eval "echo \"\${func_${func}}\"")'\\2/g'
-		done
-
-		sed -f "${src_workdir}/sed_script" -E "${work_script}" > "${src_workdir}/initrc_replaced" 
-
-		mv "${work_script}" "${src_workdir}/initrc_unseded" 
-		mv "${src_workdir}/initrc_replaced" "${work_script}"
-	fi
-
 	# foot
 	footfile="$( first_existing \
 						"${src_os_inc_dir}/foot.sh" \
@@ -99,6 +86,19 @@ cmd_build() {
 
 	[ ! -z ${arghandlerfile} ] \
 		&& append_script ${work_script} "$(cat ${arghandlerfile})"
+
+	# Replaced funcs
+	if can $replace_funcs ; then 
+		> "${src_workdir}/sed_script"
+		for func in cbegin cinfo cwarn cerror cend; do
+			append_script "${src_workdir}/sed_script" 's/\\([ \\t]*\)'"${func}"'\([ \\t]*\\)/\\1'$(eval "echo \"\${func_${func}}\"")'\\2/g'
+		done
+
+		sed -f "${src_workdir}/sed_script" -E "${work_script}" > "${src_workdir}/initrc_replaced" 
+
+		mv "${work_script}" "${src_workdir}/initrc_unseded" 
+		mv "${src_workdir}/initrc_replaced" "${work_script}"
+	fi
 
 	mkdir -p "${src_distdir}"
 	cp -p "${work_script}" "${src_distdir}"
