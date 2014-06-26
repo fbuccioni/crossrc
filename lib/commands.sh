@@ -36,6 +36,7 @@ cmd_build() {
 	if [ -f "${srcdir}/config" ]; then
 		if [ -z "${initconfdir}" ]; then
 			warn "The initconfdir is not set for this script/platform. You have to call the conf manually"
+			append_script "${work_script}" "$(cat "${incdir}/without_configdir.sh")"
 		elif can $source_conf; then
 			append_script "${work_script}" ". ${initconfdir}/${name}${confsuffix}"
 		fi
