@@ -30,14 +30,13 @@ cmd_build() {
 						"${gen_inc_dir}/head.sh" 
 	)"
 
-	write_script ${work_script} "$(cat ${headfile})"
-
+	write_script "${work_script}" "$(cat ${headfile})"
 
 	# config
 	if [ -z "${initconfdir}" ]; then
 		warn "The initconfdir is not set for this script/platform. You have to call the conf manually"
 	elif can $source_conf; then
-		append_script ${work_script} ". ${initconfdir}/${name}${confsuffix}"
+		append_script "${work_script}" ". ${initconfdir}/${name}${confsuffix}"
 	fi
 
 	# Custom/Generic funcs
@@ -52,10 +51,10 @@ cmd_build() {
 	fi
 
 	[ -f "${funcfile}" ] \
-		&& append_script ${work_script} "$(cat ${funcfile})"
+		&& append_script "${work_script}" "$(cat ${funcfile})"
 
 	# da file	
-	append_script ${work_script} "$(cat "${srcdir}/initrc")"
+	append_script "${work_script}" "$(cat "${srcdir}/initrc")"
 
 	# Replaced funcs
 	if can $replace_funcs ; then 
@@ -78,7 +77,7 @@ cmd_build() {
 						"${gen_inc_dir}/foot.sh" 
 	)"
 
-	append_script ${work_script} "$(cat ${footfile})"
+	append_script "${work_script}" "$(cat ${footfile})"
 
 	# argument parser
 	if use $generic_arg_handler; then
