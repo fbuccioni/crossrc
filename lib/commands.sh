@@ -122,6 +122,11 @@ cmd_install() {
 	local src_inc_dir="${srcdir}/include"
 	local src_os_inc_dir="${src_inc_dir}/${os}"
 	local src_gen_inc_dir="${src_inc_dir}/generic"
+	local src_os_conf="${srcdir}/os/${os}.sh"
+
+	# prepare
+	. "${os_conf}"
+	[ -f "${src_os_conf}" ] && . "${src_os_conf}" 
 
 	if [ -z "${initrcdir}" -o -z "${initconfdir}" ]; then
 		warn "Your actual configuration of platform doesn't support install, install it manually"
