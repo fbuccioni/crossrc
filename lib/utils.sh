@@ -11,7 +11,6 @@ first_existing() {
 write_script() {
 	local file="${1}"; shift
 	echo "$@" > $file 
-	echo "$@";
 }
 
 append_script() {

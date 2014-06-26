@@ -33,10 +33,12 @@ cmd_build() {
 	write_script "${work_script}" "$(cat ${headfile})"
 
 	# config
-	if [ -z "${initconfdir}" ]; then
-		warn "The initconfdir is not set for this script/platform. You have to call the conf manually"
-	elif can $source_conf; then
-		append_script "${work_script}" ". ${initconfdir}/${name}${confsuffix}"
+	if [ -f "${srcdir}/config" ]; then
+		if [ -z "${initconfdir}" ]; then
+			warn "The initconfdir is not set for this script/platform. You have to call the conf manually"
+		elif can $source_conf; then
+			append_script "${work_script}" ". ${initconfdir}/${name}${confsuffix}"
+		fi
 	fi
 
 	# Custom/Generic funcs
@@ -69,7 +71,6 @@ cmd_build() {
 		mv "${src_workdir}/initrc_replaced" "${work_script}"
 	fi
 
-
 	# foot
 	footfile="$( first_existing \
 						"${src_os_inc_dir}/foot.sh" \
@@ -77,7 +78,8 @@ cmd_build() {
 						"${gen_inc_dir}/foot.sh" 
 	)"
 
-	append_script "${work_script}" "$(cat ${footfile})"
+	[ ! -z "${footfile}" ] \
+		&& append_script "${work_script}" "$(cat ${footfile})"
 
 	# argument parser
 	if use $generic_arg_handler; then
@@ -173,6 +175,6 @@ cmd_clean() {
 	info -n "--> Cleaning workdir ${src_workdir}:"
 	rm -rfv "${src_workdir}"
 
-	[ "$(ls $workdir} | wc -l" -eq "0" ] rm -rfv "${workdir}"
+	[ "$(ls "${workdir}" | wc -l)" -eq "0" ] rm -rfv "${workdir}"
 	info "--> Clean complete\n"
 }
