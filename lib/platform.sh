@@ -16,9 +16,9 @@ kernel() {
 }
 
 vendor() {
-    if [ -f /etc/lsb-release ]; then
+    if [ -f /proc/version ]; then
         for vendor in "ubuntu" "debian"; do
-            if [ "$( grep -ci "${vendor}" /etc/lsb-release)" -gt "0" ]; then
+            if [ "$( grep -ci "${vendor}" /proc/version)" -gt "0" ]; then
                 echo "${vendor}"
                 return 0
             fi
