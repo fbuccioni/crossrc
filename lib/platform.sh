@@ -16,19 +16,22 @@ kernel() {
 }
 
 vendor() {
-    if [ -f /proc/version ]; then
-        for vendor in "ubuntu" "debian"; do
-            if [ "$( grep -ci "${vendor}" /proc/version)" -gt "0" ]; then
-                echo "${vendor}"
-                return 0
-            fi
-        done
-    fi
-   
+
     if [ -f /etc/gentoo-release ]; then
         echo "gentoo"
         return 0
     fi
+
+    for version_file in /proc/version /etc/lsb-release /etc/os-release /usr/lib/os-release; do
+        if [ -f "${version_file}" ]; then
+            for vendor in "ubuntu" "debian"; do
+                if [ "$( grep -ci "${vendor}" "${version_file}")" -gt "0" ]; then
+                    echo "${vendor}"
+                    return 0
+                fi
+            done
+        fi
+    done
 
     echo "generic"
     return 1
